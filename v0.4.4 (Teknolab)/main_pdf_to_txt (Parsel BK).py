@@ -7,7 +7,7 @@ pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
 #######################################################
-
+	
 ##### dosya adini al, veriyi kaydet #########################################################################################
 def pdf_verisini_kaydet():
 	pdf_adi = input("PDF dosyasinin adini, uzantisiz olarak yazin: ")
@@ -15,7 +15,7 @@ def pdf_verisini_kaydet():
 	pdf_dosyasi = PdfReader(dosya_adi) # Dosya adı ve uzantisi
 	toplam_safya_sayisi = len(pdf_dosyasi.pages)
 
-	### Mevcut "pdf_verisi_muayene.txt" dosyasını sil
+	### Mevcut "pdf_verisi_parsel.txt" dosyasını sil
 	txt_liste = glob.glob("*.t*")
 	# #print(txt_liste)
 	for i in txt_liste:
@@ -23,10 +23,10 @@ def pdf_verisini_kaydet():
 		# #print(f"{i} dosyası silindi.")
 	################################################
 
-	##### PDF Dosya içeriğini "pdf_verisi_muayene.txt" adıyla kaydeden Fonksiyon. ######
+	##### PDF Dosya içeriğini "pdf_verisi_parsel.txt" adıyla kaydeden Fonksiyon. ######
 	def veriyi_kaydet():
 		for sayfa in range(toplam_safya_sayisi):
-			with open("pdf_verisi_muayene.txt", "a", encoding="utf8") as dosya: 
+			with open("pdf_verisi_parsel.txt", "a", encoding="utf8") as dosya: 
 				dosya.write(pdf_dosyasi.pages[sayfa].extract_text())
 	
 	veriyi_kaydet()
@@ -36,9 +36,9 @@ def pdf_verisini_kaydet():
 pdf_verisini_kaydet()
 #############################################################################################################################
 
-##### pdf_verisi_muayene.txt dosyasını oku, belirtilen ifade ile biten satırları "degerler_muayene.tsv" dosyasına yaz. ######################
+##### pdf_verisi_parsel.txt dosyasını oku, belirtilen ifade ile biten satırları "degerler_parsel.tsv" dosyasına yaz. ######################
 def TSV_Kaydet():
-	with open("pdf_verisi_muayene.txt", "r", encoding="utf-8") as dosya:
+	with open("pdf_verisi_parsel.txt", "r", encoding="utf-8") as dosya:
 		icerik = dosya.readlines()
 		# #print(icerik)
 		gecici_numune_adi = ""
@@ -58,24 +58,24 @@ def TSV_Kaydet():
 				elif "Shore" in ic:
 					ic = ic.replace(" Shore", "  Shore") 			
 					
-				### sonucları "degerler_muayene.tsv" adıyla kaydet
-				with open("degerler_muayene.tsv", "a", encoding="utf-8") as sonuc:
+				### sonucları "degerler_parsel.tsv" adıyla kaydet
+				with open("degerler_parsel.tsv", "a", encoding="utf-8") as sonuc:
 					
 					if "Kilit Mekanizması" in gecici_numune_adi and "ParametersAnaliz" in gecici_analiz:	# Gövde Kapak Malzemesi Numunesi ile Kilit Mekanizması Numunesinin Mekanik testlerinin (Rm, Rp0,2,...) isimlerini ayrıştırıp aratmak için düzenleme yapıyorum
 						gecici_analiz = "Paslanmaz Celik "
 						
 					sonuc.write(gecici_numune_adi[37:-1] + "|" + gecici_analiz[:-1] + "|" + ic[:-1] + "|" + ic.split("  ")[0].replace("*", "") + "|" + ic.split("  ")[1].strip() + "\n")
 					
-	print("Ayıklanan test sonucları, 'degerler_muayene.tsv' dosyasına kaydedildi")
+	print("Ayıklanan test sonucları, 'degerler_parsel.tsv' dosyasına kaydedildi")
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 ##### TSV_Kaydet() Fonksiyonunu Çalıştır. #######################
 TSV_Kaydet()
 #############################################################################################################################
 
-##### "degerler_muayene.tsv" dosyasından DF olustur ve duzenle. ###############################
+##### "degerler_parsel.tsv" dosyasından DF olustur ve duzenle. ###############################
 baslik = ["Numune", "Analiz Açıklaması", "Analiz Sonucu", "Element / Test",	"Sonuc"]
-df_tsv = pd.read_csv("degerler_muayene.tsv", sep = "|", header = None, names = baslik)
+df_tsv = pd.read_csv("degerler_parsel.tsv", sep = "|", header = None, names = baslik)
 
 df_tsv["Sonuc"] = df_tsv["Sonuc"].replace("Kalan", -1)
 df_tsv["Sonuc"] = df_tsv["Sonuc"].replace(to_replace="<", value="", regex=True)
@@ -130,16 +130,16 @@ sartname_degerleri = {
 		'Paslanmaz Çelik Spektrometrik Analiz_Ni_max' : 19.0,					# Kilit Mekanizması, Anahtar ve Mafsal Pimi Numuneleri - A2 _ 70 - Muayene ve Parsel B.K.
 		'Paslanmaz Çelik Spektrometrik Analiz_Cu_min' : -1.0,					# Kilit Mekanizması, Anahtar ve Mafsal Pimi Numuneleri - A2 _ 70 - Muayene ve Parsel B.K.
 		'Paslanmaz Çelik Spektrometrik Analiz_Cu_max' : 4.0,					# Kilit Mekanizması, Anahtar ve Mafsal Pimi Numuneleri - A2 _ 70 - Muayene ve Parsel B.K.
-		'ParametersAnaliz Sonuçları_Kopma Mukavemeti_min' : 10.0,				# Sızdırmazlık Takımı Malzemesi (EPDM Conta)
-		'ParametersAnaliz Sonuçları_Kopma Mukavemeti_max' : 1_000_000.0,		# Sızdırmazlık Takımı Malzemesi (EPDM Conta)
-		'ParametersAnaliz Sonuçları_Uzama_min' : 350.0,							# Sızdırmazlık Takımı Malzemesi (EPDM Conta)
-		'ParametersAnaliz Sonuçları_Uzama_max' : 1_000_000.0,					# Sızdırmazlık Takımı Malzemesi (EPDM Conta)
-		'ParametersAnaliz Sonuçları_Shore A 1.Ölçüm_min' : 65.0,				# Sızdırmazlık Takımı Malzemesi (EPDM Conta)
-		'ParametersAnaliz Sonuçları_Shore A 1.Ölçüm_max' : 70.0,				# Sızdırmazlık Takımı Malzemesi (EPDM Conta)
-		'ParametersAnaliz Sonuçları_Shore A 2.Ölçüm_min' : 65.0,				# Sızdırmazlık Takımı Malzemesi (EPDM Conta)
-		'ParametersAnaliz Sonuçları_Shore A 2.Ölçüm_max' : 70.0,				# Sızdırmazlık Takımı Malzemesi (EPDM Conta)
-		'ParametersAnaliz Sonuçları_Shore A 3.Ölçüm_min' : 65.0,				# Sızdırmazlık Takımı Malzemesi (EPDM Conta)
-		'ParametersAnaliz Sonuçları_Shore A 3.Ölçüm_max' : 70.0					# Sızdırmazlık Takımı Malzemesi (EPDM Conta)
+		'ParametersAnaliz Sonuçları_Kopma Mukavemeti_min' : 9.0,				# Lastik Conta Malzemesi (EPDM Conta) - Parsel Baca Kapağı
+		'ParametersAnaliz Sonuçları_Kopma Mukavemeti_max' : 1_000_000.0,		# Lastik Conta Malzemesi (EPDM Conta) - Parsel Baca Kapağı
+		'ParametersAnaliz Sonuçları_Uzama_min' : 300.0,							# Lastik Conta Malzemesi (EPDM Conta) - Parsel Baca Kapağı
+		'ParametersAnaliz Sonuçları_Uzama_max' : 1_000_000.0,					# Lastik Conta Malzemesi (EPDM Conta) - Parsel Baca Kapağı
+		'ParametersAnaliz Sonuçları_Shore A 1.Ölçüm_min' : 65.0,				# Lastik Conta Malzemesi (EPDM Conta) - Parsel Baca Kapağı
+		'ParametersAnaliz Sonuçları_Shore A 1.Ölçüm_max' : 75.0,				# Lastik Conta Malzemesi (EPDM Conta) - Parsel Baca Kapağı
+		'ParametersAnaliz Sonuçları_Shore A 2.Ölçüm_min' : 65.0,				# Lastik Conta Malzemesi (EPDM Conta) - Parsel Baca Kapağı
+		'ParametersAnaliz Sonuçları_Shore A 2.Ölçüm_max' : 75.0,				# Lastik Conta Malzemesi (EPDM Conta) - Parsel Baca Kapağı
+		'ParametersAnaliz Sonuçları_Shore A 3.Ölçüm_min' : 65.0,				# Lastik Conta Malzemesi (EPDM Conta) - Parsel Baca Kapağı
+		'ParametersAnaliz Sonuçları_Shore A 3.Ölçüm_max' : 75.0					# Lastik Conta Malzemesi (EPDM Conta) - Parsel Baca Kapağı
 		}
 
 ##### Şartnamede belirtilen Min. ve Max. değerlerini, sözlükten bulan fonksiyonlar ###
@@ -181,6 +181,6 @@ df_tsv['Max.Kontrol'] = df_tsv.apply(max_kontrol, axis=1)
 df_tsv.drop("Aranan", axis = 1, inplace = True)		# "Aranan" sütununu sil.
 
 ### Sonucu KAYDET
-df_tsv.to_excel("Sonuc_ve_Mukayese_Muayene.xlsx")
-print("'Sonuc_ve_Mukayese_Muayene.xlsx' dosyası olusturuldu.")
+df_tsv.to_excel("Sonuc_ve_Mukayese_Parsel.xlsx")
+print("'Sonuc_ve_Mukayese_Parsel.xlsx' dosyası olusturuldu.")
 ######################################################################

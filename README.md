@@ -2,41 +2,21 @@
 
 ## PDF'ten TXT'ye Dönüşüm ve Veri Madenciliği
 
-Örnek **Analiz_Rapor.pdf** dosyası içindeki verileri, [PyPDF2](https://github.com/py-pdf/pypdf) kütüphanesi yardımıyla **pdf_verisi.txt** dosyasına aktarıyoruz.
+Örnek **PDF** dosyası içindeki verileri, [PyPDF2](https://github.com/py-pdf/pypdf) kütüphanesi yardımıyla **pdf_verisi_....txt** dosyasına aktarıyoruz.
 
-Ardından [RE (Regular Expression (Düzenli İfadeler))](https://docs.python.org/3/library/re.html) kütüphanesi yardımıyla, aranan değerlere (desenlere) uygun çıktıları elde ederek konsola yazdırıyor ya da **Rapor_Degerleri.txt** isimli dosyaya kaydediyoruz.
+## v0.4.4 (Teknolab);
 
-***Örnek desenler;***
+Bu versiyonda, **PDF** dosyası içeriği ayıklanarak yani sadece istediğimiz test isimleri ve sonuçlarını seçerek **TSV** uzantılı dosyaya kaydediyoruz. Ardından TSV dosyasını DataFrame'e çeviriyoruz. Test Sonuçlarının belirlenen Teknik Şartnamedeki min. ve max. değerlerine uygun olup olmadığını otomatik olarak tespit edilip sütunlara "Uygun" ya da "UYGUN DEĞİL" şeklinde yazıyor. Teknik şartnamede belirtilmeyen değerler değerlendirme dışı bırakılıyor.
 
-```python
-desen_brinell_sertlik = r"Brinell\s+\d+\.\d+\s+HBW"
-desen_cekme_gerilmesi = r"\(Rm\)\s+\d+\.\d+\s+N/mm\^2\s+EN ISO 6892-1 Metod B"
-desen_kimyasal = r"\*?\w+\s+<?\d+\.\d+\s+%\s+ASTM E1999"
-```
+![SS1](img/v0.4.4-SS.png)
 
-***Örnek Çıktılar;***
+## v0.4.3 (Teknolab);
 
-```python
-Brinell   195.10  HBW
-Brinell   193.21  HBW
-Brinell   190.44  HBW
+Bu versiyonda, v.0.4.2 sürümünde elde ettiğimiz çıktıları (.tsv uzantılı dosya içeriğini) **Sonuc ve Kıyas.ods** dosyasına yapıştırarak, Sonuçların belirlenen Teknik Şartname değerlerine uygun olup olmadığını hızlı bir şekilde görebiliyoruz.
 
-(Rm)   562.00  N/mm^2  EN ISO 6892-1 Metod B
-(Rm)   558.00  N/mm^2  EN ISO 6892-1 Metod B
-(Rm)   552.00  N/mm^2  EN ISO 6892-1 Metod B
+![SS1](img/v0.4.3-SS1.png)
 
-Ti  0.042  %  ASTM E1999
-*Mg  0.040  %  ASTM E1999
-C  3.688  %  ASTM E1999
-Si  2.513  %  ASTM E1999
-Mn  0.388  %  ASTM E1999
-P  0.041  %  ASTM E1999
-S  0.0069  %  ASTM E1999
-Cr  0.017  %  ASTM E1999
-Ni  <0.010  %  ASTM E1999
-Cu  0.155  %  ASTM E1999
-V  0.021  %  ASTM E1999
-```
+![SS2](img/v0.4.3-SS2.png)
 
 ## v0.4.2 (Teknolab);
 
@@ -101,10 +81,38 @@ EPDM - Conta Numune 5|ParametersAnaliz Sonuçları|*Kopma Mukavemeti   355.00  N
 EPDM - Conta Numune 5|ParametersAnaliz Sonuçları|*Uzama  10.00  %  TS ISO 37  |Uzama|10,00
 ```
 
-## v0.4.3 (Teknolab);
+## Önceki sürümlerde;
 
-Bu versiyonda, v.0.4.2 sürümünde elde ettiğimiz çıktıları (.tsv uzantılı dosya içeriğini) **Sonuc ve Kıyas.ods** dosyasına yapıştırarak, Sonuçların belirlenen Teknik Şartname değerlerine uygun olup olmadığını hızlı bir şekilde görebiliyoruz.
+[RE (Regular Expression (Düzenli İfadeler))](https://docs.python.org/3/library/re.html) kütüphanesi yardımıyla, aranan değerlere (desenlere) uygun çıktıları elde ederek konsola yazdırıyor ya da **Rapor_Degerleri.txt** isimli dosyaya kaydediyorduk.
 
-![SS1](img/v0.4.3-SS1.png)
+***Örnek desenler;***
 
-![SS2](img/v0.4.3-SS2.png)
+```python
+desen_brinell_sertlik = r"Brinell\s+\d+\.\d+\s+HBW"
+desen_cekme_gerilmesi = r"\(Rm\)\s+\d+\.\d+\s+N/mm\^2\s+EN ISO 6892-1 Metod B"
+desen_kimyasal = r"\*?\w+\s+<?\d+\.\d+\s+%\s+ASTM E1999"
+```
+
+***Örnek Çıktılar;***
+
+```python
+Brinell   195.10  HBW
+Brinell   193.21  HBW
+Brinell   190.44  HBW
+
+(Rm)   562.00  N/mm^2  EN ISO 6892-1 Metod B
+(Rm)   558.00  N/mm^2  EN ISO 6892-1 Metod B
+(Rm)   552.00  N/mm^2  EN ISO 6892-1 Metod B
+
+Ti  0.042  %  ASTM E1999
+*Mg  0.040  %  ASTM E1999
+C  3.688  %  ASTM E1999
+Si  2.513  %  ASTM E1999
+Mn  0.388  %  ASTM E1999
+P  0.041  %  ASTM E1999
+S  0.0069  %  ASTM E1999
+Cr  0.017  %  ASTM E1999
+Ni  <0.010  %  ASTM E1999
+Cu  0.155  %  ASTM E1999
+V  0.021  %  ASTM E1999
+```
