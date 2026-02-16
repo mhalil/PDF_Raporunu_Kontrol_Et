@@ -1,4 +1,4 @@
-# PDF_to_TXT
+# PDF Raporunu Excel'e Aktar ve Kontrol Et
 
 ## PDF'ten TXT'ye Dönüşüm ve Veri Madenciliği
 
